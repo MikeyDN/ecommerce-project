@@ -1,7 +1,5 @@
-import { Component, useEffect, useState } from 'react'
 import { Category, Product } from '../../lib/types'
-import { client } from '../../lib/client'
-import { getCategory, getProduct } from '../../lib/cache'
+import cache from '../../lib/cache'
 import Head from 'next/head'
 import ProductView from '../../components/ProductView'
 
@@ -13,7 +11,7 @@ type PageProps = {
 
 export async function getServerSideProps(context: PageProps) {
   const { slug } = context.query
-  const category: Category = await getCategory(slug)
+  const category: Category = await cache.getCategory(slug)
   return {
     props: {
       category,

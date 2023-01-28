@@ -1,6 +1,7 @@
 import LRUCache from 'lru-cache'
 import { Category, Product } from './types'
 import { newClient } from './client'
+import { Twinkle_Star } from '@next/font/google'
 
 type CategoriesCache = {
   [slug: string]: Category
@@ -14,92 +15,105 @@ const productsCache = new LRUCache<string, ProductsCache>({ max: 100 * 1024 })
 const categoriesCache = new LRUCache<string, CategoriesCache>({
   max: 100 * 1024,
 })
+class Cache {
+  categories: Category[] = []
 
-const productsCacheToList = (cache: ProductsCache) => {
-  return Object.values(cache)
-}
+  products: Product[] = []
 
-const categoriesCacheToList = (cache: CategoriesCache) => {
-  return Object.values(cache)
-}
-
-const fetchCategories = async () => {
-  type Accumulator = {
-    [slug: string]: Category
-  }
-  const categories = await newClient.getCategories()
-  return categories.reduce((acc: Accumulator, category: Category) => {
-    acc[category.slug] = category
-    return acc
-  }, {} as CategoriesCache)
-}
-
-const fetchProducts = async () => {
-  type Accumulator = {
-    [slug: string]: Product
-  }
-  const products = await newClient.getProducts()
-
-  return products.reduce((acc: Accumulator, product: Product) => {
-    acc[product.slug] = product
-    return acc
-  }, {} as ProductsCache)
-}
-
-// Check if the cache has the categories and return them if it does, otherwise fetch them
-export const getCategories = async () => {
-  const cached = categoriesCache.get('categories')
-  if (cached && cached.categories) {
-    console.log('cache hit')
-    return categoriesCacheToList(cached)
+  productsCacheToList = (cache: ProductsCache) => {
+    this.products = Object.values(cache)
+    return this.products
   }
 
-  const categories = await fetchCategories()
-  categoriesCache.set('categories', categories)
-  return categoriesCacheToList(categories)
-}
-
-// Check if the cache has the category and return if it does, otherwise fetch all categories
-export const getCategory = async (slug: string) => {
-  const cached = categoriesCache.get('categories')
-  if (cached && cached.categories && cached[slug]) {
-    console.log('cache hit')
-    return cached[slug]
-  }
-  const categories = await fetchCategories()
-
-  categoriesCache.set('categories', categories)
-  return categories[slug]
-}
-
-// Check if the cache has the product and return if it does, otherwise fetch all products
-export const getProduct = async (slug: string) => {
-  const cached = productsCache.get('products')
-  if (cached && cached.products && cached[slug]) {
-    console.log('cache hit')
-    return cached[slug]
+  categoriesCacheToList = (cache: CategoriesCache) => {
+    this.categories = Object.values(cache)
+    return this.categories
   }
 
-  const products = await fetchProducts()
-  productsCache.set('products', products)
-  return products[slug]
-}
-
-// Check if the cache has the products and return if it does, otherwise fetch all products
-export const getProducts = async () => {
-  const cached = productsCache.get('products')
-  if (cached && cached.products) {
-    console.log('cache hit')
-    return productsCacheToList(cached)
+  fetchCategories = async () => {
+    const categories = await newClient.getCategories()
+    return categories.reduce((acc: CategoriesCache, category: Category) => {
+      acc[category.slug] = category
+      return acc
+    }, {})
   }
 
-  const products = await fetchProducts()
-  productsCache.set('products', products)
-  return productsCacheToList(products)
-}
+  fetchProducts = async () => {
+    const products = await newClient.getProducts()
 
-// Clear the cache
-export const clearCache = () => {
-  productsCache.clear()
-  categoriesCache.clear()
+    return products.reduce((acc: ProductsCache, product: Product) => {
+      acc[product.slug] = product
+      return acc
+    }, {})
+  }
+
+  // Check if the cache has the categories and return them if it does, otherwise fetch them
+  getCategories = async (cacheOnly: boolean = false) => {
+    const cached = categoriesCache.get('categories')
+    if (cached && cached.categories) {
+      console.log('cache hit')
+      return this.categoriesCacheToList(cached)
+    }
+
+    // If no cached categories and cacheOnly is true, return an empty array
+    if (cacheOnly) {
+      return [] as Category[]
+    }
+
+    const categories = await this.fetchCategories()
+    categoriesCache.set('categories', categories)
+    return this.categoriesCacheToList(categories)
+  }
+
+  // Check if the cache has the category and return if it does, otherwise fetch all categories
+  getCategory = async (slug: string, cacheOnly: boolean = false) => {
+    const cached = categoriesCache.get('categories')
+    if (cached && cached.categories && cached[slug]) {
+      console.log('cache hit')
+      return cached[slug]
+    }
+
+    // If no cached categories and cacheOnly is true, return an empty array
+    if (cacheOnly) {
+      return {} as Category
+    }
+    const categories = await this.fetchCategories()
+
+    categoriesCache.set('categories', categories)
+    return categories[slug]
+  }
+
+  // Check if the cache has the product and return if it does, otherwise fetch all products
+  getProduct = async (slug: string) => {
+    const cached = productsCache.get('products')
+    if (cached && cached.products && cached[slug]) {
+      console.log('cache hit')
+      return cached[slug]
+    }
+
+    const products = await this.fetchProducts()
+    productsCache.set('products', products)
+    return products[slug]
+  }
+
+  // Check if the cache has the products and return if it does, otherwise fetch all products
+  getProducts = async () => {
+    const cached = productsCache.get('products')
+    if (cached && cached.products) {
+      console.log('cache hit')
+      return this.productsCacheToList(cached)
+    }
+
+    const products = await this.fetchProducts()
+    productsCache.set('products', products)
+    return this.productsCacheToList(products)
+  }
+
+  // Clear the cache
+  clearCache = () => {
+    productsCache.clear()
+    categoriesCache.clear()
+  }
 }
+const cache = new Cache()
+export default cache

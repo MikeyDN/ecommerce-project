@@ -29,7 +29,6 @@ export default function CartView() {
       }
     }
   }
-  console.log('items', items)
   return (
     <>
       <div className="cart-items">
@@ -73,6 +72,7 @@ export default function CartView() {
 
                 <div className="cart-item-control">
                   <Button
+                    className="cart-item-control-button"
                     onClick={() =>
                       updateItemQuantity(item.id, item.quantity! - 1)
                     }
@@ -80,13 +80,17 @@ export default function CartView() {
                     <FontAwesomeIcon icon={faMinus} />
                   </Button>
                   <Button
+                    className="cart-item-control-button"
                     onClick={() =>
                       updateItemQuantity(item.id, item.quantity! + 1)
                     }
                   >
                     <FontAwesomeIcon icon={faAdd} />
                   </Button>
-                  <Button onClick={() => removeItem(item.id)}>
+                  <Button
+                    className="cart-item-control-button"
+                    onClick={() => removeItem(item.id)}
+                  >
                     <FontAwesomeIcon icon={faTrash} />
                   </Button>
                 </div>

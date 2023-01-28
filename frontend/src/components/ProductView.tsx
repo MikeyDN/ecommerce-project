@@ -9,7 +9,6 @@ import Image from 'next/image'
 type productViewProps = {
   product: Product
   key: number
-  backendUrl: string
 }
 
 function ProductView(props: productViewProps) {

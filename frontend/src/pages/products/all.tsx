@@ -1,10 +1,10 @@
 import React from 'react'
 import { Product } from '../../lib/types'
 import ProductView from '../../components/ProductView'
-import { getProducts } from '../../lib/cache'
+import cache from '../../lib/cache'
 
 export async function getServerSideProps(context: any) {
-  const products: Product[] = await getProducts()
+  const products: Product[] = await cache.getProducts()
   return {
     props: {
       products,
@@ -24,7 +24,7 @@ const allProducts = ({
   return (
     <div className="product-list">
       {products.map((product: Product, index: number) => (
-        <ProductView product={product} key={index} backendUrl={backendUrl} />
+        <ProductView product={product} key={index} />
       ))}
     </div>
   )

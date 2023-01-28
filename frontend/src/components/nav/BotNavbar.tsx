@@ -20,8 +20,8 @@ function BotNavbar(props: { children: JSX.Element[] }) {
   const router = useRouter()
   const path = router.pathname
   const getActive = () => {
-    props.children.map((child: JSX.Element, index: number) => {
-      if (child.props.href === path) {
+    props.children.forEach((child: JSX.Element, index: number) => {
+      if (path.split('/')[1] === child.props.href.split('/')[1]) {
         setActiveIndex(index)
       }
     })

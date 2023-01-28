@@ -2,13 +2,13 @@ import Head from 'next/head'
 import React from 'react'
 import { Category } from '../../lib/types'
 import { Inter } from '@next/font/google'
-import { getCategories } from '../../lib/cache'
+import cache from '../../lib/cache'
 import { useRouter } from 'next/router'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export async function getServerSideProps() {
-  const categories = await getCategories()
+  const categories = await cache.getCategories()
   return {
     props: {
       categories,

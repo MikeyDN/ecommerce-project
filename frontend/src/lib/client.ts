@@ -34,7 +34,6 @@ class backendClient {
   async getCategories() {
     let retval
     const res = await fetch(`${this.serverUrl}/content/categories/`)
-    console.log(res)
     retval = (await res.json()) as Category[]
     retval = retval.map((category) => {
       category.products = category.products.map((product) => {

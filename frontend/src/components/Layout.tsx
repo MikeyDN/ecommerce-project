@@ -3,10 +3,10 @@ import Footer from './Footer'
 import TopNavbar from './nav/TopNavbar'
 import { Category } from '../lib/types'
 import Cart from './Cart'
-function Layout(props: { children: any | null; categories: Category[] }) {
+function Layout(props: { children: any | null }) {
   return (
     <>
-      <TopNavbar categories={props.categories} />
+      <TopNavbar />
       {props.children}
       <Cart />
       <Footer />

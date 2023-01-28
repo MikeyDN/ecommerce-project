@@ -8,22 +8,15 @@ import { SSRProvider } from 'react-bootstrap'
 import Layout from '../components/Layout'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { getCategories } from '../lib/cache'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-import { Category } from '../lib/types'
-import { useEffect, useState } from 'react'
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
-  const [categories, setCategories] = useState<Category[]>([])
-  useEffect(() => {
-    getCategories().then((categories) => setCategories(categories))
-  }, [])
 
   return (
     <SSRProvider>
       <CartProvider>
-        <Layout categories={categories}>
+        <Layout>
           <AnimatePresence mode="popLayout">
             <motion.div
               key={router.asPath}

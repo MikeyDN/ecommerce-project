@@ -5,7 +5,7 @@ import { Carousel } from 'react-responsive-carousel'
 import { AddToCartIcon } from '../../components/utils'
 import LoadingIcon from '../../components/LoadingIcon'
 import Image from 'next/image'
-import { getProduct } from '../../lib/cache'
+import cache from '../../lib/cache'
 
 type PageProps = {
   query: {
@@ -15,7 +15,7 @@ type PageProps = {
 
 export const getServerSideProps = async (context: PageProps) => {
   const slug = context.query.slug
-  const product: Product = await getProduct(slug)
+  const product: Product = await cache.getProduct(slug)
   return {
     props: {
       product,
