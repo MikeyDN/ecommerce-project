@@ -1,6 +1,4 @@
 from django.db import models
-from content.models import Product
-
 # Create your models here.
 
 

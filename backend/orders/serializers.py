@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from .models import Order, OrderProduct
-from content.serializers import ProductSerializer
 from content.models import Product
-import json
-from drf_yasg.utils import swagger_auto_schema
 
 
 class OrderProductSerializer(serializers.ModelSerializer):

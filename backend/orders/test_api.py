@@ -1,7 +1,6 @@
 from django.test import TestCase, Client
 from content.models import Product, Category
 from django.contrib.auth.models import User
-import json
 from .models import Order, OrderProduct
 from rest_framework import status
 
