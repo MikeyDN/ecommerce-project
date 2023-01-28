@@ -48,7 +48,11 @@ class Product(models.Model):
 
 class Image(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='static/images/')
+    image = models.ImageField(upload_to='products/')
 
     def __str__(self):
         return self.product.title
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()
+        super().delete(*args, **kwargs)
