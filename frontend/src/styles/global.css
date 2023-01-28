@@ -146,9 +146,9 @@ body {
   color: #b0b2b4 !important;
 }
 
-/* .collapse-menu ul a {
+.collapse-menu ul a {
   border-bottom: 1px solid #212529;
-} */
+}
 
 .collapse-menu ul a:hover {
   text-decoration: none;
@@ -157,7 +157,8 @@ body {
 .collapse-menu ul a:last-child {
   border-bottom: 0;
 }
-*/ .product-list {
+*/
+.product-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

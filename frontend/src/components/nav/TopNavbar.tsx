@@ -38,7 +38,7 @@ export default function TopNavbar() {
               </Link>
             </li>
             <li>
-              <Link id="categories-collapse" href="/categories">
+              <Link className="nav-link" href="/categories">
                 Categories
               </Link>
             </li>
