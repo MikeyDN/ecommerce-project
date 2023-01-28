@@ -5,11 +5,11 @@ import { Product } from '../lib/types'
 import { Button, Overlay, Tooltip } from 'react-bootstrap'
 import { useCart } from 'react-use-cart'
 
-type productViewProps = {
+type propsType = {
   product: Product
 }
-export function AddToCartIcon(props: productViewProps) {
-  props.product.id = props.product.slug
+export function AddToCartIcon({ product }: propsType) {
+  product.id = product.slug
   const { addItem } = useCart()
   const [, updateState] = useState()
   const forceUpdate = useCallback(() => updateState(undefined), [])
@@ -17,7 +17,7 @@ export function AddToCartIcon(props: productViewProps) {
   const target = useRef(null)
 
   const handleClick = () => {
-    addItem(props.product)
+    addItem(product)
     setIsVisible(!isVisible)
     setTimeout(() => {
       setIsVisible(false)

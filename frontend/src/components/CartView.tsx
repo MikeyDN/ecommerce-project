@@ -7,6 +7,7 @@ import { PanInfo } from 'framer-motion'
 import CartTotal from './CartTotal'
 import { calculateShipping } from '../lib/shipping'
 import { Button } from 'react-bootstrap'
+import cart from '../pages/cart'
 
 export default function CartView() {
   const {
@@ -21,10 +22,9 @@ export default function CartView() {
   const controls = useDragControls()
 
   const shippingCost = calculateShipping('IL')
-
   const remove = (slug: string) => {
     return (event: PointerEvent, info: PanInfo) => {
-      if (info.offset.x < -200) {
+      if (info.offset.x < -200 && info.delta.x > -3) {
         removeItem(slug)
       }
     }
@@ -61,7 +61,7 @@ export default function CartView() {
 
                   <div className="cart-item-details">
                     <div className="cart-item-name">
-                      <h4>{item.name}</h4>
+                      <h4>{item.title}</h4>
                     </div>
                     <div className="cart-item-price">Price: {item.price}$</div>
                     <div className="cart-item-quantity">
