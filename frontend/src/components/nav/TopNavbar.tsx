@@ -38,16 +38,9 @@ export default function TopNavbar() {
               </Link>
             </li>
             <li>
-              <CollapseMenu title="Categories" id="categories-collapse">
-                {categories.map((category: Category, key: number) => (
-                  <CollapseMenu.Item
-                    href={`/categories/${encodeURIComponent(category.slug)}`}
-                    key={key}
-                  >
-                    <span>{category.name}</span>
-                  </CollapseMenu.Item>
-                ))}
-              </CollapseMenu>
+              <Link id="categories-collapse" href="/categories">
+                Categories
+              </Link>
             </li>
             <li>
               <Link className="nav-link" href="/">

@@ -79,7 +79,7 @@ body {
   margin: 8px 5px;
   width: 200px;
 }
-
+/* TODO: remove this if it stays unused
 .collapse-menu ul {
   display: flex;
   flex-direction: column;
@@ -157,8 +157,7 @@ body {
 .collapse-menu ul a:last-child {
   border-bottom: 0;
 }
-
-.product-list {
+*/ .product-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
