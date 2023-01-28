@@ -5,16 +5,6 @@ import { Category } from '../../lib/types'
 import cache from '../../lib/cache'
 
 export default function TopNavbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [categories, setCategories] = useState<Category[]>([])
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categories = await cache.getCategories()
-      setCategories(categories)
-    }
-    fetchCategories()
-  }, [])
   return (
     <>
       <nav className="top-navbar">
