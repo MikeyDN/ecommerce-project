@@ -1,6 +1,6 @@
 import LRUCache from 'lru-cache'
 import { Category, Product } from './types'
-import { newClient } from './client'
+import { privateClient } from './RootClient'
 import { Twinkle_Star } from '@next/font/google'
 
 type CategoriesCache = {
@@ -31,18 +31,18 @@ class Cache {
   }
 
   fetchCategories = async () => {
-    const categories = await newClient.getCategories()
+    const categories = await privateClient.getCategories()
     return categories.reduce((acc: CategoriesCache, category: Category) => {
-      acc[category.slug] = category
+      acc[category.slug!] = category
       return acc
     }, {})
   }
 
   fetchProducts = async () => {
-    const products = await newClient.getProducts()
+    const products = await privateClient.getProducts()
 
     return products.reduce((acc: ProductsCache, product: Product) => {
-      acc[product.slug] = product
+      acc[product.slug!] = product
       return acc
     }, {})
   }

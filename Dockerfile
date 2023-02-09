@@ -12,7 +12,7 @@ RUN touch /root/.ssh/known_hosts
 
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-RUN git clone git@github.com:MikeyDN/ecommerce-project.git /app
+COPY . /app
 
 WORKDIR /app/frontend
 

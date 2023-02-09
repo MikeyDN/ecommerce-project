@@ -8,7 +8,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       products,
-      backendUrl: process.env.BACKEND_URL,
+      backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
     },
   }
 }

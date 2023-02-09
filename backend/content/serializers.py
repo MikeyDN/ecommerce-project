@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'description', 'price', 'quantity',
+        fields = ['id', 'title', 'description', 'price', 'stock',
                   'created_at', 'updated_at', 'slug', 'images', 'categories']
 
     def to_representation(self, instance):
@@ -42,4 +42,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'products']
+        fields = ['id', 'name', 'created_at', 'updated_at', 'slug', 'products']

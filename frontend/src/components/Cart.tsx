@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { motion } from 'framer-motion'
+import { Modal } from 'react-bootstrap'
 import CartView from './CartView'
 
 export default function Cart() {

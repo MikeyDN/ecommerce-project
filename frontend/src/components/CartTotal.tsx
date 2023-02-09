@@ -27,6 +27,12 @@ export default function CartTotal() {
     animate: { x: -310, y: 0 },
     exit: { x: -20, y: 0 },
   })
+  const combobox = useComboboxState({
+    gutter: 4,
+    sameWidth: true,
+    list: countryList,
+    defaultValue: 'Israel',
+  })
 
   useEffect(() => {
     if (window.innerWidth < 991.8) {
@@ -48,13 +54,6 @@ export default function CartTotal() {
       })
     }
   }, [window.innerWidth])
-
-  const combobox = useComboboxState({
-    gutter: 4,
-    sameWidth: true,
-    list: countryList,
-    defaultValue: 'Israel',
-  })
 
   useEffect(() => {
     const combox = document.getElementById(

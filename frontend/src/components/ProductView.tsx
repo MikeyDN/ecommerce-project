@@ -13,7 +13,7 @@ type productViewProps = {
 
 function ProductView(props: productViewProps) {
   const productUrl = `/products/${props.product.slug}`
-  const imageUrl = props.product.images[0]
+  const imageUrl = props.product.images ? props.product.images[0] : ''
   return (
     <div className="product-box">
       <Link href={productUrl}>
@@ -21,7 +21,7 @@ function ProductView(props: productViewProps) {
           <Image
             priority
             src={imageUrl}
-            alt={props.product.title}
+            alt={props.product.title ? props.product.title : 'Not Found'}
             fill
             style={{ objectFit: 'scale-down' }}
             sizes="(max-width: 1080) 196px, 
@@ -31,7 +31,9 @@ function ProductView(props: productViewProps) {
       </Link>
       <div className="product-details">
         <Link href={productUrl}>
-          <h3 className="product-title">{props.product.title}</h3>
+          <h3 className="product-title">
+            {props.product.title ? props.product.title : 'Product Not Found'}
+          </h3>
         </Link>
 
         <Container className="price">
