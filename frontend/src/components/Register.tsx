@@ -27,28 +27,12 @@ export default function Register({
   const [errorCode, setErrorCode] = useState(0)
 
   const register = async () => {
+    setError('')
+    setSuccess(false)
     const response = await publicClient.register({ phone, name, email })
     if (!response.error) {
-      setShowInput(true)
-    } else {
-      setError(response.error.message)
-    }
-  }
-
-  const verifyOtp = async () => {
-    const response = await publicClient.verifyOtp(phone, otpCode)
-    if (!response.error) {
-      // success
-      setCookie('token', response.token)
       setSuccess(true)
-      setTimeout(() => {
-        setShowRegister(false)
-      }, 1000)
-    } else if (response.error.status === 404) {
-      // No user with given phone number found
-      setError('No user with given phone number found, please register first')
     } else {
-      // error
       setError(response.error.message)
     }
   }
@@ -58,7 +42,7 @@ export default function Register({
       {error && <Alert variant="danger">{error}</Alert>}
       {success && (
         <Alert variant="success">
-          Phone Verified! Continue with your order
+          Phone Verified! You can log in now!
         </Alert>
       )}
       <form>
@@ -81,13 +65,7 @@ export default function Register({
           value={phoneNumber}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <Button onClick={register}>Send verification code</Button>
-        {showInput && (
-          <>
-            <input type="text" onChange={(e) => setOtpCode(e.target.value)} />
-            <Button onClick={verifyOtp}>Verify OTP Code</Button>
-          </>
-        )}
+        <Button onClick={register}>Register</Button>
       </form>
     </Modal.Body>
   )

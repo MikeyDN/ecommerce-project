@@ -23,7 +23,7 @@ function ProductView(props: productViewProps) {
             src={imageUrl}
             alt={props.product.title ? props.product.title : 'Not Found'}
             fill
-            style={{ objectFit: 'scale-down' }}
+            style={{ objectFit: 'cover' }}
             sizes="(max-width: 1080) 196px, 
                                             250px"
           />

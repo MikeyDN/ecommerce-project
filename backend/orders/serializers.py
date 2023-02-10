@@ -4,6 +4,7 @@ from content.models import Product
 from orders.utils import send_otp, verify_otp, does_product_exist
 import jwt
 import logging
+import sys
 
 
 class OrderProductSerializer(serializers.ModelSerializer):
@@ -131,7 +132,6 @@ class OTPSerializer(serializers.Serializer):
         self.validate(self.validated_data)
         data = self.validated_data
         assert 'phone' in data  # type: ignore
-
         try:
             client = OrderClient.objects.get(
                 phone=data['phone'])  # type: ignore
@@ -139,9 +139,7 @@ class OTPSerializer(serializers.Serializer):
             return serializers.ValidationError({'status': 'failed',
                                                 'message': 'Client with given phone number does not exist',
                                                 'code': 2})
-
         if 'otp' in data:  # type: ignore
-
             verification = verify_otp(
                 data['phone'], data['otp'])  # type: ignore
 

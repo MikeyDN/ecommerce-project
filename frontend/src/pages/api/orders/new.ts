@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { publicClient } from '../../../lib/ApiClient'
+import { rootClient } from '../../../lib/RootClient'
 import { Order } from '../../../lib/types'
 
 export default async function handler(
@@ -9,11 +9,11 @@ export default async function handler(
   if (req.method == 'POST') {
     const token = req.headers.authentication as string
     const order = req.body as Order
-    const response = await publicClient.createOrder(order, token)
+    const response = await rootClient.createOrder(order, token)
     if (!response.error) {
       res.status(201).json(response)
     } else {
-      res.status(500).json(response)
+      res.status(response.error.status).json(response)
     }
   }
 }

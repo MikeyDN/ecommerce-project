@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { publicClient } from '../../../../lib/ApiClient'
+import { rootClient } from '../../../../lib/RootClient'
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,8 +7,8 @@ export default async function handler(
 ) {
   if (req.method == 'POST') {
     const phone = req.body.phone
-    const otpCode = req.body.otpCode
-    const response = await publicClient.verifyOtp(phone, otpCode)
+    const otpCode = req.body.otp
+    const response = await rootClient.verifyOtp(phone, otpCode)
     if (response.status) {
       res.status(201).json(response)
     } else {

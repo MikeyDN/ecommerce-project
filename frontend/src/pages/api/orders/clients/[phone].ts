@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { publicClient } from '../../../../lib/ApiClient'
+import { rootClient } from '../../../../lib/RootClient'
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   if (req.method == 'GET') {
     const phone = req.query.phone as string
-    const response = await publicClient.getClient(phone)
+    const response = await rootClient.getClient(phone)
     if (!response.error) {
       res.status(200).json(response)
     } else {

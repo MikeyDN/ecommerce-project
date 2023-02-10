@@ -19,13 +19,9 @@ export default function Login({
   const [errorCode, setErrorCode] = useState(0)
   const [success, setSuccess] = useState(false)
 
-  const sendOtp = async () => {
-    const response = await publicClient.sendOtp(phone)
-    setShowInput(true)
-  }
-
   const verifyOtp = async () => {
     setSuccess(false)
+    setError('')
     const response = await publicClient.verifyOtp(phone, otpCode)
     if (!response.error) {
       // success

@@ -103,18 +103,22 @@ class OrderClientView(APIView):
         serializer = OrderClientSerializer(client)
         response = Response(serializer.data)
         return response
+    
+    @swagger_auto_schema(request_body=OrderClientSerializer)
+    def delete(self, request, client_phone, format=None):
+        client = OrderClient.objects.get(phone=client_phone)
+        client.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class OTPView(APIView):
-    permission_classes = [ClientAuthenticationOrReadOnly | IsAdminUser,]
+    permission_classes = [WebsiteAuthentication,]
 
     @swagger_auto_schema(request_body=OTPSerializer)
     def post(self, request, format=None):
 
         serializer = OTPSerializer(data=request.data)
-
         if serializer.is_valid():
             response = serializer.save()
             return Response(response, status=status.HTTP_201_CREATED)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

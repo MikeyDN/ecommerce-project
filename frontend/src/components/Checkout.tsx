@@ -38,13 +38,19 @@ export default function Checkout({ destination }: { destination: string }) {
   if (phone.startsWith('0')) {
     setPhone(phone.slice(1))
   }
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  const sendOrder = async (e: FormEvent) => {
-    e.preventDefault()
+  const handleClose = () => { 
+    setShow(false)
     setIsSent(false)
     setErr('')
+    setShowLogin(false)
+    setShowRegister(false) 
+  }
+  const handleShow = () => {setShow(true)}
+
+  const sendOrder = async (e: FormEvent) => {
+    setErr('')
+    e.preventDefault()
+
     const products = items.map((item) => {
       return {
         slug: item.id,
@@ -60,15 +66,13 @@ export default function Checkout({ destination }: { destination: string }) {
     try {
       // Check if user is logged in
       if (!('token' in cookies)) {
-        if (!client) {
-          setShowRegister(true)
+        const response = await publicClient.sendOtp(combobox.value + phone)
+        if (!response.error) {
+          setShowLogin(true)
           handleShow()
         } else {
-          const response = await publicClient.sendOtp(combobox.value + phone)
-          if (response) {
-            setShowLogin(true)
-            handleShow()
-          }
+          setErr(response.error.message)
+          handleShow()
         }
       } else {
         const order = {
@@ -79,10 +83,10 @@ export default function Checkout({ destination }: { destination: string }) {
           client,
         } as Order
         const response = await publicClient.createOrder(order, cookies.token)
+        console.log(response)
         if (response.error) {
           setErr(response.error.message)
           handleShow()
-          return
         } else if ('address' in response) {
           setErr('')
           setIsSent(true)
