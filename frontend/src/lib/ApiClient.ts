@@ -11,7 +11,9 @@ export class ApiClient {
     let retval
     const res = await fetch(`${server}/api/orders/clients/${phone}`)
     if (res.status != 200) {
-      return { error: { status: res.status, message: res.statusText } } as OrderClient
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as OrderClient
     }
     retval = await res.json()
 
@@ -32,9 +34,13 @@ export class ApiClient {
     return retval as RegisterResponse
   }
 
- 
   async sendOtp(phone: string) {
     let retval
+    if (phone.length != 13) {
+      return {
+        error: { status: 400, message: 'Phone number must be 9 digits' },
+      } as OtpResponse
+    }
     const payload = { phone: phone }
     const res = await fetch(`${server}/api/orders/otp/sendotp`, {
       method: 'POST',
@@ -43,6 +49,14 @@ export class ApiClient {
       },
       body: JSON.stringify(payload),
     })
+    if (res.status == 404) {
+      return {
+        error: {
+          status: res.status,
+          message: 'Client does not exist, please register first',
+        },
+      } as OtpResponse
+    }
     if (res.status != 201) {
       return {
         error: { status: res.status, message: JSON.stringify(res.body) },
@@ -67,7 +81,7 @@ export class ApiClient {
     retval = await res.json()
     if (res.status == 400) {
       return {
-        error: { status: res.status, message: retval.error.message }
+        error: { status: res.status, message: retval.error.message },
       } as OtpResponse
     }
     if (res.status != 201) {
@@ -100,7 +114,6 @@ export class ApiClient {
     retval = (await res.json()) as OtpResponse
     return retval
   }
-
 }
 
 export const publicClient = new ApiClient('http://localhost:8000')

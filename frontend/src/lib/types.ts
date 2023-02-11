@@ -1,15 +1,14 @@
 export type Product = {
-  error?: BadResponse
-  id?: string
-  title?: string
-  description?: string
-  price?: number
-  quantity?: number
-  created_at?: string
-  updated_at?: string
-  slug?: string
-  images?: string[]
-  category?: {
+  id: string
+  title: string
+  description: string
+  price: number
+  quantity: number
+  created_at: string
+  updated_at: string
+  slug: string
+  images: string[]
+  category: {
     id: number
     name: string
     slug: string
@@ -27,13 +26,10 @@ export type SanityImage = {
   }
 }
 export type Category = {
-  status?: number
-  error?: boolean
-  message?: string
-  id?: number
-  name?: string
+  id: number
+  name: string
   slug?: string
-  products?: Product[]
+  products: Product[]
 }
 
 export type Promoted = {
@@ -45,11 +41,16 @@ export type Promoted = {
 
 export type OrderClient = {
   id?: number
-  name: string
-  email: string
-  phone: string
+  name?: string
+  email?: string
+  phone?: string
   orders?: Order[]
   error?: BadResponse
+}
+
+export type ApiResponse = {
+  error?: BadResponse
+  response?: any
 }
 
 export type Order = {

@@ -1,4 +1,4 @@
-import { Product, Category, Order, OrderClient } from './types'
+import { Product, Category, Order, OrderClient, ApiResponse } from './types'
 
 export const buildImages = (product: Product) => {
   product.images = product.images?.map((image) => {
@@ -12,7 +12,7 @@ export class RootClient {
   constructor(serverUrl: string = 'http://localhost:8000') {
     this.serverUrl = serverUrl
   }
-  
+
   async createClient(client: OrderClient) {
     let retval
     if (!process.env.BACKEND_AUTH_TOKEN) {
@@ -55,8 +55,10 @@ export class RootClient {
       body: JSON.stringify(payload),
     })
     retval = await res.json()
-    if (res.status == 400){
-      return { error: { status: res.status, message: retval['error'] } } as Order
+    if (res.status == 400) {
+      return {
+        error: { status: res.status, message: retval['error'] },
+      } as Order
     }
     if (res.status != 201) {
       return { error: { status: res.status, message: res.statusText } } as Order
@@ -64,7 +66,6 @@ export class RootClient {
 
     return retval as Order
   }
-
 
   async doesClientExist(phone: string) {
     if (!process.env.BACKEND_AUTH_TOKEN) {
@@ -85,14 +86,18 @@ export class RootClient {
   async getProducts() {
     let retval
     const res = await fetch(`${this.serverUrl}/content/products/`)
-    retval = (await res.json()) as Product[]
-    retval = retval.map((product) => {
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = await res.json()
+    retval = retval.map((product: Product) => {
       return buildImages(product)
-    })
-    return retval
+    }) as Product[]
+    return { response: retval } as ApiResponse
   }
 
-  
   async getClient(phone: string) {
     let retval
     const res = await fetch(`${this.serverUrl}/orders/clients/${phone}/`, {
@@ -121,14 +126,19 @@ export class RootClient {
   async getCategories() {
     let retval
     const res = await fetch(`${this.serverUrl}/content/categories/`)
-    retval = (await res.json()) as Category[]
-    retval = retval.map((category) => {
+    retval = await res.json()
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = retval.map((category: Category) => {
       category.products = category.products?.map((product) => {
         return buildImages(product)
       })
       return category
     })
-    return retval
+    return { response: retval } as ApiResponse
   }
 
   async getCategory(slug: string) {
@@ -136,16 +146,14 @@ export class RootClient {
     const res = await fetch(`${this.serverUrl}/content/categories/${slug}/`)
     if (res.status != 200) {
       return {
-        status: res.status,
-        error: true,
-        message: `Categories:\n${res.statusText}`,
-      } as Category
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
     }
     retval = (await res.json()) as Category
     retval.products = retval.products?.map((product) => {
       return buildImages(product)
     })
-    return retval
+    return { response: retval } as ApiResponse
   }
 
   async getOrders() {
@@ -221,7 +229,7 @@ export class RootClient {
         'Content-Type': 'application/json',
         Authentication: process.env.BACKEND_AUTH_TOKEN,
       },
-      body: JSON.stringify({ phone, otp}),
+      body: JSON.stringify({ phone, otp }),
     })
     retval = await res.json()
     if (res.status != 201) {

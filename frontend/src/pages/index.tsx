@@ -49,7 +49,7 @@ function Home({ categories }: { categories: Category[] }) {
           <a
             key={index}
             className="category-box"
-            onClick={handleClick(category.slug)}
+            onClick={handleClick(category.slug!)} // Due to backend automatically adding a slug, this is safe
             id={`#${category.slug}`}
           >
             {category.name}

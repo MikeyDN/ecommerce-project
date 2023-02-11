@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { newClient } from '../../../lib/RootClient'
+import { rootClient } from '../../../lib/RootClient'
 import { OrderClient } from '../../../lib/types'
 import { Button } from 'react-bootstrap'
 
@@ -12,10 +12,10 @@ type PageProps = {
 }
 
 export async function getServerSideProps(context: PageProps) {
-  const client: OrderClient = await newClient.getClient(context.query.phone)
+  const client: OrderClient = await rootClient.getClient(context.query.phone)
 
   if (client.phone) {
-    await newClient.sendOtp(client.phone)
+    await rootClient.sendOtp(client.phone)
     return {
       props: {
         client,

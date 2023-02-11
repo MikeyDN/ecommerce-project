@@ -1,1 +1,1 @@
-docker build --pull --rm -f "Dockerfile" -t firstecommerce:latest "." --no-cache
+docker build --pull --rm -f "Dockerfile" -t mikeydn/firstecommerce:latest "."

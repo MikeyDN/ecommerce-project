@@ -7,6 +7,11 @@ export default async function handler(
 ) {
   if (req.method == 'POST') {
     const phone = req.body.phone
+    const clientExists = await rootClient.doesClientExist(phone)
+    if (!clientExists) {
+      res.status(404).json({ message: 'Client does not exist' })
+      return
+    }
     const response = await rootClient.sendOtp(phone)
     if (response.status) {
       res.status(201).json(response)

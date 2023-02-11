@@ -35,7 +35,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | b
 ENV PATH /root/.nvm/versions/node/v$NODE_VERSION/bin:$PATH
 
 RUN apt update && apt install -y supervisor
-RUN pip install django==4.1.5 djangorestframework==3.12.0 django-cors-headers==3.10.0 django-extensions==3.1.3 drf_yasg==1.21.4 Pillow==9.3.0 -U
+RUN pip install django==4.1.5 djangorestframework==3.12.0 django-cors-headers==3.10.0 django-extensions==3.1.3 drf_yasg==1.21.4 Pillow==9.3.0 -U twilio==6.62.0
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY --from=frontend-builder /app /app

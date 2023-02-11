@@ -11,6 +11,11 @@ import {
   useComboboxState,
 } from 'ariakit/combobox'
 import Checkout from './Checkout'
+import { useCookies } from 'react-cookie'
+import { OrderClient } from '../lib/types'
+import { Modal } from 'react-bootstrap'
+import Register from './Register'
+import Login from './Login'
 
 type checkoutPropsType = {
   initial: { x?: number; y?: number; zIndex?: number; opacity?: number }
@@ -19,7 +24,14 @@ type checkoutPropsType = {
 }
 
 export default function CartTotal() {
+  const [cookies] = useCookies(['token'])
+  const [show, setShow] = useState(false)
   const [destination, setDestination] = useState('Israel')
+  const [showRegister, setShowRegister] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
+  const [client, setClient] = useState<OrderClient>({
+    error: { message: 'client not found', status: 404 },
+  })
   const { cartTotal, items } = useCart()
   const [checkout, setCheckout] = useState(false)
   const [checkoutProps, setCheckoutProps] = useState<checkoutPropsType>({
@@ -62,8 +74,72 @@ export default function CartTotal() {
     setDestination(combox.value)
   }, [combobox])
 
+  const handleCheckout = () => {
+    if (!cookies.token) {
+      setShowLogin(true)
+      handleShow()
+      return
+    }
+    setCheckout(true)
+  }
+
+  const handleClose = () => {
+    setShow(false)
+    setShowLogin(false)
+    setShowRegister(false)
+  }
+  const handleShow = () => setShow(true)
+
   return (
     <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header>
+          {showLogin && (
+            <>
+              <Modal.Title>
+                {showLogin && <>Login</>}
+                {showRegister && <>Register</>}
+              </Modal.Title>
+              <Button
+                onClick={() => {
+                  setShowLogin(!showLogin)
+                  setShowRegister(!showRegister)
+                }}
+              >
+                {!showLogin && <>Login</>}
+                {!showRegister && <>Register</>}
+              </Button>
+            </>
+          )}
+          {showRegister && (
+            <>
+              <Modal.Title>Register</Modal.Title>
+              <Button
+                onClick={() => {
+                  setShowLogin(true)
+                  setShowRegister(false)
+                }}
+              >
+                Log in
+              </Button>
+            </>
+          )}
+        </Modal.Header>
+        <Modal.Body>
+          {showRegister && (
+            <Register
+              setShowRegister={setShowRegister}
+              setShowLogin={setShowLogin}
+            />
+          )}
+          {showLogin && <Login handleClose={handleClose} />}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <div
         style={{ marginLeft: '2vw', position: 'relative', zIndex: 92 }}
         className="beautiful-box cart-total-wrapper"
@@ -115,12 +191,7 @@ export default function CartTotal() {
               )}
             </ComboboxPopover>
           </div>
-          <Button
-            className="checkout-button"
-            onClick={() => {
-              setCheckout(!checkout)
-            }}
-          >
+          <Button className="checkout-button" onClick={handleCheckout}>
             Checkout
           </Button>
         </div>
@@ -147,7 +218,7 @@ export default function CartTotal() {
               transition={{ duration: 0.2 }}
               className="beautiful-box"
             >
-              <Checkout destination={destination} />
+              <Checkout destination={destination} client={client} />
             </motion.div>
           )}
         </AnimatePresence>

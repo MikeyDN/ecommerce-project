@@ -36,7 +36,7 @@ function Home({ categories }: { categories: Category[] }) {
         {categories.map((category, index) => (
           <a
             className="category-box"
-            onClick={handleClick(category.slug)}
+            onClick={handleClick(category.slug!)}
             id={`#${category.slug}`}
           >
             {category.name}

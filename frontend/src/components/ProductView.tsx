@@ -5,6 +5,7 @@ import { Product } from '../lib/types'
 import { AddToCartIcon } from './utils'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import LoadingIcon from './LoadingIcon'
 
 type productViewProps = {
   product: Product
@@ -23,6 +24,8 @@ function ProductView(props: productViewProps) {
             src={imageUrl}
             alt={props.product.title ? props.product.title : 'Not Found'}
             fill
+            placeholder="blur"
+            blurDataURL="/assets/spin.gif"
             style={{ objectFit: 'cover' }}
             sizes="(max-width: 1080) 196px, 
                                             250px"

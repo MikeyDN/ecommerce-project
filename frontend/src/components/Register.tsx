@@ -1,8 +1,15 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Modal, Button, Alert } from 'react-bootstrap'
 import { publicClient } from '../lib/ApiClient'
-import { useCookies } from 'react-cookie'
+import {
+  Combobox,
+  useComboboxState,
+  ComboboxPopover,
+  ComboboxItem,
+} from 'ariakit'
 import { OrderClient, OtpResponse } from '../lib/types'
+import { countryCodes } from '../lib/phonecodes'
+import { PhoneInput } from './utils'
 
 type registerResponse = {
   response: OrderClient
@@ -10,21 +17,17 @@ type registerResponse = {
 }
 
 export default function Register({
-  phone,
   setShowRegister,
+  setShowLogin,
 }: {
-  phone: string
-  setShowRegister: any
+  setShowRegister: Function
+  setShowLogin: Function
 }) {
-  const [showInput, setShowInput] = useState(false)
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
-  const [phoneNumber, setPhone] = useState(phone)
+  const [phone, setPhone] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [otpCode, setOtpCode] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [errorCode, setErrorCode] = useState(0)
 
   const register = async () => {
     setError('')
@@ -32,6 +35,10 @@ export default function Register({
     const response = await publicClient.register({ phone, name, email })
     if (!response.error) {
       setSuccess(true)
+      setTimeout(() => {
+        setShowRegister(false)
+        setShowLogin(true)
+      }, 2000)
     } else {
       setError(response.error.message)
     }
@@ -41,9 +48,7 @@ export default function Register({
     <Modal.Body>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && (
-        <Alert variant="success">
-          Phone Verified! You can log in now!
-        </Alert>
+        <Alert variant="success">Phone Verified! Redirecting to login</Alert>
       )}
       <form>
         <input
@@ -51,21 +56,19 @@ export default function Register({
           name="name"
           placeholder="Full name"
           onChange={(e) => setName(e.target.value)}
+          style={{ marginBottom: '0.5rem' }}
         />
         <input
           type="text"
           name="email"
           placeholder="eMail"
           onChange={(e) => setEmail(e.target.value)}
+          style={{ marginBottom: '0.5rem' }}
         />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone number"
-          value={phoneNumber}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <Button onClick={register}>Register</Button>
+        <PhoneInput setPhone={setPhone} value={phone} />
+        <div style={{ marginTop: '0.5rem' }}>
+          <Button onClick={register}>Register</Button>
+        </div>
       </form>
     </Modal.Body>
   )

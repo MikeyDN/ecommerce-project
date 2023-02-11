@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { newClient } from '../../../lib/RootClient'
+import { rootClient } from '../../../lib/RootClient'
 import { OrderClient, OtpResponse } from '../../../lib/types'
 import { useCookies } from 'react-cookie'
 
@@ -11,10 +11,10 @@ type PageProps = {
 }
 
 export async function getServerSideProps(context: PageProps) {
-  const client: OrderClient = await newClient.getClient(context.query.phone)
+  const client: OrderClient = await rootClient.getClient(context.query.phone)
 
   if (client.phone) {
-    const response = await newClient.verifyOtp(client.phone, context.query.otp)
+    const response = await rootClient.verifyOtp(client.phone, context.query.otp)
     return {
       props: {
         client,

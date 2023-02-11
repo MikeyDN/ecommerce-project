@@ -1,7 +1,6 @@
 import LRUCache from 'lru-cache'
-import { Category, Product } from './types'
+import { Category, Product, ApiResponse } from './types'
 import { rootClient } from './RootClient'
-import { Twinkle_Star } from '@next/font/google'
 
 type CategoriesCache = {
   [slug: string]: Category
@@ -31,17 +30,25 @@ class Cache {
   }
 
   fetchCategories = async () => {
-    const categories = await rootClient.getCategories()
-    return categories.reduce((acc: CategoriesCache, category: Category) => {
-      acc[category.slug!] = category
-      return acc
-    }, {})
+    const res = await rootClient.getCategories()
+    const response = res.response as Category[]
+    const retval = response.reduce(
+      (acc: CategoriesCache, category: Category) => {
+        acc[category.slug!] = category
+        return acc
+      },
+      {},
+    )
+    return retval
   }
 
   fetchProducts = async () => {
     const products = await rootClient.getProducts()
+    if (products.error) {
+      return {}
+    }
 
-    return products.reduce((acc: ProductsCache, product: Product) => {
+    return products.response.reduce((acc: ProductsCache, product: Product) => {
       acc[product.slug!] = product
       return acc
     }, {})
@@ -68,17 +75,11 @@ class Cache {
   // Check if the cache has the category and return if it does, otherwise fetch all categories
   getCategory = async (slug: string, cacheOnly: boolean = false) => {
     const cached = categoriesCache.get('categories')
-    if (cached && cached.categories && cached[slug]) {
+    if (cached && cached[slug]) {
       console.log('cache hit')
       return cached[slug]
     }
-
-    // If no cached categories and cacheOnly is true, return an empty array
-    if (cacheOnly) {
-      return {} as Category
-    }
     const categories = await this.fetchCategories()
-
     categoriesCache.set('categories', categories)
     return categories[slug]
   }
