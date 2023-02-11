@@ -16,6 +16,7 @@ import { OrderClient } from '../lib/types'
 import { Modal } from 'react-bootstrap'
 import Register from './Register'
 import Login from './Login'
+import { publicClient } from '../lib/ApiClient'
 
 type checkoutPropsType = {
   initial: { x?: number; y?: number; zIndex?: number; opacity?: number }
@@ -80,6 +81,14 @@ export default function CartTotal() {
       handleShow()
       return
     }
+    const { phone } = JSON.parse(
+      Buffer.from(cookies.token.split('.')[1], 'base64').toString('utf8'),
+    )
+    publicClient.getClient(phone).then((res) => {
+      if (!res.error) {
+        setClient(res)
+      }
+    })
     setCheckout(true)
   }
 
