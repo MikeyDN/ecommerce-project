@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Order, OrderClient
-from .serializers import OrderSerializer, OTPSerializer, OrderClientSerializer
-from .authentication import ClientAuthentication, ClientAuthenticationOrReadOnly, ReadOnly, WebsiteAuthentication
+from .models import Order, OrderClient, Review
+from .serializers import OrderSerializer, OTPSerializer, OrderClientSerializer, ReviewSerializer
+from .authentication import WebsiteAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
@@ -103,7 +103,7 @@ class OrderClientView(APIView):
         serializer = OrderClientSerializer(client)
         response = Response(serializer.data)
         return response
-    
+
     @swagger_auto_schema(request_body=OrderClientSerializer)
     def delete(self, request, client_phone, format=None):
         client = OrderClient.objects.get(phone=client_phone)
@@ -122,3 +122,14 @@ class OTPView(APIView):
             response = serializer.save()
             return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ReviewView(APIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [WebsiteAuthentication,]
+
+    def get(self, request):
+        reviews = Review.objects.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)

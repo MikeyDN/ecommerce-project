@@ -1,20 +1,8 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Modal, Button, Alert } from 'react-bootstrap'
-import { publicClient } from '../lib/ApiClient'
-import {
-  Combobox,
-  useComboboxState,
-  ComboboxPopover,
-  ComboboxItem,
-} from 'ariakit'
-import { OrderClient, OtpResponse } from '../lib/types'
-import { countryCodes } from '../lib/phonecodes'
-import { PhoneInput } from './utils'
-
-type registerResponse = {
-  response: OrderClient
-  otpResponse: OtpResponse
-}
+import { publicClient } from '../../lib/ApiClient'
+import { OrderClient, OtpResponse } from '../../lib/types'
+import { PhoneInput } from '../Utils/PhoneInput'
 
 export default function Register({
   setShowRegister,

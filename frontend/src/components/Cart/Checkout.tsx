@@ -1,32 +1,24 @@
 import { FormEvent, useState } from 'react'
 import { useCart } from 'react-use-cart'
 import { Modal, Button } from 'react-bootstrap'
-import { publicClient } from '../lib/ApiClient'
+import { publicClient } from '../../lib/ApiClient'
 import { useCookies } from 'react-cookie'
-import { Order, OrderClient } from '../lib/types'
-import Register from './Register'
-import Login from './Login'
+import { Order } from '../../lib/types'
+import useAuth from '../../lib/useAuth'
 
-export default function Checkout({
-  destination,
-  client,
-}: {
-  destination: string
-  client: OrderClient
-}) {
+export default function Checkout() {
   // cart stuff
   const { items, emptyCart } = useCart()
   // cookies stuff
   const [cookies] = useCookies(['token'])
   // form stuff
   const [address, setAddress] = useState('')
-  const [phone, setPhone] = useState('')
   const [city, setCity] = useState('')
   const [zipcode, setZipcode] = useState('')
   const [show, setShow] = useState(false)
   const [err, setErr] = useState('')
   const [isSent, setIsSent] = useState(false)
-  var currentForm = document.forms[0]
+  const { user, setUser } = useAuth()
 
   const handleClose = () => {
     setShow(false)
@@ -52,7 +44,7 @@ export default function Checkout({
         city,
         zipcode,
         products,
-        client,
+        client: user,
       } as Order
       const response = await publicClient.createOrder(order, cookies.token)
       if (response.error) {
@@ -76,12 +68,10 @@ export default function Checkout({
     <div className="checkout">
       <div className="checkout-container">
         <div className="checkout-form">
-          <h1>Checkout</h1>
           <div id="client-info">
-            <h3>Client Info</h3>
-            <p>Name: {client.name}</p>
-            <p>Email: {client.email}</p>
-            <p>Phone: {client.phone}</p>
+            <p>Name: {user.name}</p>
+            <p>Email: {user.email}</p>
+            <p>Phone: {user.phone}</p>
           </div>
           <form onSubmit={sendOrder}>
             <input

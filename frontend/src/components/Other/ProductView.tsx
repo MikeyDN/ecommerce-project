@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import Link from 'next/link'
-import { Product } from '../lib/types'
-import { AddToCartIcon } from './utils'
-import { motion } from 'framer-motion'
+import { Product } from '../../lib/types'
+import { AddToCartIcon } from '../Utils/AddToCartIcon'
 import Image from 'next/image'
-import LoadingIcon from './LoadingIcon'
 
 type productViewProps = {
   product: Product

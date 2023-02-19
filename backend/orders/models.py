@@ -1,5 +1,6 @@
 from django.db import models
 from secrets import token_urlsafe
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 
@@ -65,3 +66,11 @@ class OrderClient(models.Model):
         if not self.secret:
             self.secret = token_urlsafe(32)  # 256 bits
         super().save(*args, **kwargs)
+
+
+class Review(models.Model):
+    client = models.ForeignKey(OrderClient, on_delete=models.CASCADE)
+    review = models.TextField(max_length=300)
+    rating = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)])
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)

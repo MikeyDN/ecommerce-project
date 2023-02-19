@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react'
-import CollapseMenu from './CollapseMenu'
 import Link from 'next/link'
-import { Category } from '../../lib/types'
-import cache from '../../lib/cache'
-
+import useAuth from '../../lib/useAuth'
 export default function TopNavbar() {
+  const { user } = useAuth()
   return (
     <>
       <nav className="top-navbar">
@@ -32,11 +29,13 @@ export default function TopNavbar() {
                 Categories
               </Link>
             </li>
-            <li>
-              <Link className="nav-link" href="/">
-                About
-              </Link>
-            </li>
+            {user.phone && (
+              <li>
+                <Link className="nav-link" href="/orders">
+                  My Orders
+                </Link>
+              </li>
+            )}
             <li>
               <Link className="nav-link" href="/">
                 Contact Us

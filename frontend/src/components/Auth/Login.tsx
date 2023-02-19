@@ -1,15 +1,9 @@
 import { useState } from 'react'
-import {
-  Combobox,
-  useComboboxState,
-  ComboboxPopover,
-  ComboboxItem,
-} from 'ariakit'
 import { Modal, Button, Alert } from 'react-bootstrap'
-import { publicClient } from '../lib/ApiClient'
+import { publicClient } from '../../lib/ApiClient'
 import { useCookies } from 'react-cookie'
-import { countryCodes } from '../lib/phonecodes'
-import { PhoneInput } from './utils'
+import { countryCodes } from '../../lib/countrycodes'
+import { PhoneInput } from '../Utils/PhoneInput'
 
 export default function Login({ handleClose }: { handleClose: Function }) {
   const [showInput, setShowInput] = useState(false)
@@ -19,12 +13,6 @@ export default function Login({ handleClose }: { handleClose: Function }) {
   const [error, setError] = useState('')
   const [errorCode, setErrorCode] = useState(0)
   const [success, setSuccess] = useState(false)
-  const combobox = useComboboxState({
-    gutter: 4,
-    sameWidth: true,
-    list: countryCodes.map((country) => country.dial_code),
-    defaultValue: '+972',
-  })
 
   const sendOtp = async () => {
     setError('')

@@ -5,6 +5,7 @@ from rest_framework import permissions
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
 from drf_yasg.utils import swagger_auto_schema
+from random import random
 
 # class ImageView(generics.ListAPIView):
 #     lookup_field = 'product'

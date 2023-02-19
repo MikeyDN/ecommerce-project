@@ -2,7 +2,8 @@ import React from 'react'
 import { Container } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import BotNavbar from './nav/BotNavbar'
+import BotNavbar from '../Nav/BotNavbar'
+import useAuth from '../../lib/useAuth'
 import {
   faFacebook,
   faTwitter,
@@ -15,7 +16,17 @@ import {
   faCircleQuestion,
   faShoppingCart,
   faRss,
+  faEnvelopesBulk,
 } from '@fortawesome/free-solid-svg-icons'
+
+function HiddenMenu() {
+  const { user } = useAuth()
+  if (user.phone) {
+    return <BotNavbar.Item href="/orders" icon={faEnvelopesBulk} />
+  } else {
+    return <BotNavbar.Item href="/categories" icon={faCubesStacked} />
+  }
+}
 
 function Footer() {
   return (
@@ -24,7 +35,7 @@ function Footer() {
         <BotNavbar.Item href="/" icon={faHouse} />
         <BotNavbar.Item href="/products/all" icon={faCompass} />
         <BotNavbar.Item href="/cart" icon={faShoppingCart} />
-        <BotNavbar.Item href="/categories" icon={faCubesStacked} />
+        {HiddenMenu()}
         <BotNavbar.Item href="/faq" icon={faCircleQuestion} />
       </BotNavbar>
       <div className="footer">

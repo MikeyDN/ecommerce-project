@@ -8,7 +8,7 @@ import {
   useComboboxState,
   ComboboxItem,
 } from 'ariakit/combobox'
-import { countryCodes } from '../../../lib/phonecodes'
+import { countryCodes } from '../../../lib/countrycodes'
 
 // export async function getServerSideProps() {
 //   const client = await newClient.getClient()

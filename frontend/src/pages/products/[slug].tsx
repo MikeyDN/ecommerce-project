@@ -2,8 +2,8 @@ import React from 'react'
 import { Product } from '../../lib/types'
 import Head from 'next/head'
 import { Carousel } from 'react-responsive-carousel'
-import { AddToCartIcon } from '../../components/utils'
-import LoadingIcon from '../../components/LoadingIcon'
+import { AddToCartIcon } from '../../components/Utils/AddToCartIcon'
+import LoadingIcon from '../../components/Utils/LoadingIcon'
 import Image from 'next/image'
 import cache from '../../lib/cache'
 
@@ -36,7 +36,7 @@ export default function ProductDisplay({ product }: { product: Product }) {
         </div>
         <div className="product-display">
           <div className="carousel-container">
-            <Carousel>
+            <Carousel showThumbs={false}>
               {product.images.map((image, index) => (
                 <div className="image-container">
                   <Image

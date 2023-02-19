@@ -1,6 +1,6 @@
 import React from 'react'
 import { Product } from '../../lib/types'
-import ProductView from '../../components/ProductView'
+import ProductView from '../../components/Other/ProductView'
 import cache from '../../lib/cache'
 
 export async function getServerSideProps(context: any) {

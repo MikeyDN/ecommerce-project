@@ -1,9 +1,12 @@
 import Head from 'next/head'
-import { Category } from '../lib/types'
+import { Category, Product, Review } from '../lib/types'
 import { Inter } from '@next/font/google'
 import { useRouter } from 'next/router'
 import cache from '../lib/cache'
-
+import Image from 'next/image'
+import ProductView from '../components/Other/ProductView'
+import { Card } from 'react-bootstrap'
+import ReviewComponent from '../components/Other/Review'
 const inter = Inter({ subsets: ['latin'] })
 
 type PageProps = {
@@ -14,14 +17,41 @@ type PageProps = {
 
 export async function getServerSideProps(context: PageProps) {
   const categories: Category[] = await cache.getCategories()
+  const promoted: Product[] = await cache.getPromotedProducts()
+  const reviews: Review[] = await cache.getReviews()
+  const bannerImage = `http://localhost:8000/${await cache.getBanner()}`
+  const bannerTitle = await cache.getBannerTitle()
+  const bannerSubtitle = await cache.getBannerSubtitle()
+
   return {
     props: {
       categories,
+      promoted,
+      reviews,
+      bannerImage,
+      bannerTitle,
+      bannerSubtitle,
     },
   }
 }
 
-function Home({ categories }: { categories: Category[] }) {
+type HomeProps = {
+  categories: Category[]
+  promoted: Product[]
+  reviews: Review[]
+  bannerImage: string
+  bannerTitle: string
+  bannerSubtitle: string
+}
+
+function Home({
+  categories,
+  promoted,
+  reviews,
+  bannerImage,
+  bannerTitle,
+  bannerSubtitle,
+}: HomeProps) {
   const router = useRouter()
 
   const handleClick = (slug: string) => {
@@ -34,14 +64,25 @@ function Home({ categories }: { categories: Category[] }) {
       <Head>
         <title>Buddy's e-Shop</title>
       </Head>
-      <div className="promoted-wrapper">
-        <div className="promoted-products">
-          {/* <Carousel>
-            {promoted.map((promotedProduct) => (
-              // TODO: Add promoted products
-              <div></div>
-            ))}
-          </Carousel> */}
+      <div className="banner">
+        <div
+          className="banner-content"
+          style={{
+            height: 150,
+            width: '80%',
+            minWidth: 300,
+            maxWidth: 1000,
+            position: 'relative',
+            margin: 'auto',
+            marginBottom: 50,
+          }}
+        >
+          <Image
+            src={bannerImage}
+            alt={bannerTitle}
+            style={{ objectFit: 'cover' }}
+            fill
+          />
         </div>
       </div>
       <div className="category-wrapper">
@@ -55,6 +96,21 @@ function Home({ categories }: { categories: Category[] }) {
             {category.name}
           </a>
         ))}
+      </div>
+
+      <div id="promoted-products">
+        {promoted.map((product, index) => (
+          <ProductView product={product} key={index} />
+        ))}
+      </div>
+
+      <div id="reviews-wrapper">
+        <h1 style={{ width: 'fit-content', margin: 'auto' }}>Reviews</h1>
+        <div id="reviews">
+          {reviews.map((review, index) => (
+            <ReviewComponent key={index} review={review} />
+          ))}
+        </div>
       </div>
     </>
   )

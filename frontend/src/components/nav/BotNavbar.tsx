@@ -1,10 +1,8 @@
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { useRouter } from 'next/router'
 import { AnimatePresence, motion } from 'framer-motion'
-import { IndexKind } from 'typescript'
 
 function Item(props: { href: string; icon: IconDefinition }) {
   return (

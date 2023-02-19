@@ -1,7 +1,7 @@
 import { Category, Product } from '../../lib/types'
 import cache from '../../lib/cache'
 import Head from 'next/head'
-import ProductView from '../../components/ProductView'
+import ProductView from '../../components/Other/ProductView'
 
 type PageProps = {
   query: {

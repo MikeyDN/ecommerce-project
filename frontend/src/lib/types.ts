@@ -14,6 +14,29 @@ export type Product = {
     slug: string
   }[]
 }
+export type Review = {
+  client: string
+  review: string
+  rating: number
+  purchase_total: number
+  purchased_at: string
+}
+
+export type ImageSetting = {
+  setting: string
+  value: string
+}
+
+export type TextSetting = {
+  setting: string
+  value: string
+}
+
+export type WebsiteSettings = {
+  images: ImageSetting[]
+  text: TextSetting[]
+}
+
 export type SanityImage = {
   asset: {
     url: string
@@ -46,6 +69,7 @@ export type OrderClient = {
   phone?: string
   orders?: Order[]
   error?: BadResponse
+  token?: string
 }
 
 export type ApiResponse = {
@@ -62,13 +86,15 @@ export type Order = {
   client: OrderClient
   zipcode: string
   products: OrderProduct[]
+  total?: number
   completed?: boolean
   payment_completed?: boolean
 }
 
 export type OrderProduct = {
   error?: BadResponse
-  slug: string
+  slug?: string
+  product?: Product
   quantity: number
 }
 

@@ -5,23 +5,12 @@ import { faTrash, faAdd, faMinus } from '@fortawesome/free-solid-svg-icons'
 import { AnimatePresence, motion, useDragControls } from 'framer-motion'
 import { PanInfo } from 'framer-motion'
 import CartTotal from './CartTotal'
-import { calculateShipping } from '../lib/shipping'
 import { Button } from 'react-bootstrap'
-import cart from '../pages/cart'
 
 export default function CartView() {
-  const {
-    isEmpty,
-    totalUniqueItems,
-    items,
-    updateItemQuantity,
-    removeItem,
-    cartTotal,
-  } = useCart()
+  const { items, updateItemQuantity, removeItem } = useCart()
 
   const controls = useDragControls()
-
-  const shippingCost = calculateShipping('IL')
   const remove = (slug: string) => {
     return (event: PointerEvent, info: PanInfo) => {
       if (info.offset.x < -200 && info.delta.x > -3) {
@@ -34,7 +23,7 @@ export default function CartView() {
       <div className="cart-items">
         <ul>
           <AnimatePresence mode="sync" initial={false}>
-            {items.map((item, index) => (
+            {items.map((item) => (
               <motion.li
                 key={item.slug}
                 itemID={item.slug}

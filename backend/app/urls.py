@@ -25,6 +25,7 @@ from rest_framework import permissions
 urlpatterns = [
     path('content/', include('content.urls')),
     path('orders/', include('orders.urls')),
+    path('website/', include('website.urls')),
     path('admin/', admin.site.urls),
 ]
 

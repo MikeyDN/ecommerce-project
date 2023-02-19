@@ -1,4 +1,14 @@
-import { Product, Category, Order, OrderClient, ApiResponse } from './types'
+import {
+  Product,
+  Category,
+  Order,
+  OrderClient,
+  ApiResponse,
+  Review,
+  WebsiteSettings,
+  ImageSetting,
+  TextSetting,
+} from './types'
 
 export const buildImages = (product: Product) => {
   product.images = product.images?.map((image) => {
@@ -238,6 +248,69 @@ export class RootClient {
       } as OrderClient
     }
     return retval
+  }
+
+  async getPromotedProducts() {
+    let retval
+    const res = await fetch(`${this.serverUrl}/website/promoted/`)
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = await res.json()
+    retval = retval.map((product: Product) => {
+      return buildImages(product)
+    }) as Product[]
+    return { response: retval } as ApiResponse
+  }
+
+  async getReviews() {
+    let retval
+    const res = await fetch(`${this.serverUrl}/orders/reviews/`)
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = (await res.json()) as Review[]
+    return { response: retval } as ApiResponse
+  }
+
+  async getSettings() {
+    let retval
+    const res = await fetch(`${this.serverUrl}/website/settings/`)
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = (await res.json()) as WebsiteSettings
+    return { response: retval } as ApiResponse
+  }
+
+  async getImageSettings() {
+    let retval
+    const res = await fetch(`${this.serverUrl}/website/settings/images/`)
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = (await res.json()) as ImageSetting[]
+    return { response: retval } as ApiResponse
+  }
+
+  async getTextSettings() {
+    let retval
+    const res = await fetch(`${this.serverUrl}/website/settings/text/`)
+    if (res.status != 200) {
+      return {
+        error: { status: res.status, message: res.statusText },
+      } as ApiResponse
+    }
+    retval = (await res.json()) as TextSetting[]
+    return { response: retval } as ApiResponse
   }
 }
 

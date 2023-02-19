@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Order, OrderProduct, OrderClient
+from .models import Order, OrderProduct, OrderClient, Review
 from content.models import Product
+from content.serializers import ProductSerializer
 from orders.utils import send_otp, verify_otp, does_product_exist
 import jwt
 import logging
@@ -37,6 +38,22 @@ class OrderProductSerializer(serializers.ModelSerializer):
         return response
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = ['client', 'review',
+                  'rating']
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['client'] = instance.client.name
+        response['purchase_total'] = OrderSerializer(
+            instance.order, many=False).data['total']
+        response['purchased_at'] = instance.order.created_at
+        return response
+
+
 class OrderSerializer(serializers.ModelSerializer):
     products = OrderProductSerializer(
         many=True, source='orderproduct_set')
@@ -48,6 +65,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
+        for i in range(len(response['products'])):
+            product = Product.objects.get(slug=response['products'][i]['slug'])
+            response['products'][i] = {
+                'product': ProductSerializer(product).data,
+                'quantity': instance.orderproduct_set.all()[i].quantity
+            }
         order_total = 0
         for order_product in instance.orderproduct_set.all():
             order_total += order_product.product.price * order_product.quantity
@@ -97,7 +120,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderClientSerializer(serializers.ModelSerializer):
-    orders = OrderSerializer(many=True, read_only=True)
+    orders = OrderSerializer(many=True, read_only=True, source='order_set')
 
     class Meta:
         model = OrderClient
@@ -106,11 +129,9 @@ class OrderClientSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        user_id = response['id']
-        phone = response['phone']
-        secret = response.pop('secret')
-        # response['token'] = jwt.encode(
-        #    {'user_id': user_id, 'phone': phone}, secret, algorithm='HS256')
+        for order in response['orders']:
+            order.pop('client')
+        response.pop('secret')
         return response
 
     def to_internal_value(self, data):
